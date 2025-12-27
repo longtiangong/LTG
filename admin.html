@@ -2,236 +2,95 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>龍天宮 2026 年度祈福報名表</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>龍天宮 管理版</title>
 <style>
-body { font-family:"Microsoft JhengHei"; background:#f9f9f9; padding:20px; }
-h1 { text-align:center; color:#8B0000; line-height:1.4; }
-.box { background:#fff; padding:20px; margin-bottom:20px; border-radius:8px; }
-label { font-size:17px; display:block; margin-top:8px; }
-input, select { width:100%; font-size:17px; padding:8px; margin-top:4px; }
-.person { border-bottom:1px dashed #ccc; padding-bottom:10px; margin-bottom:10px; }
-button { width:100%; padding:12px; font-size:18px; background:#06C755; color:#fff; border:none; border-radius:6px; margin-top:10px; }
-.add { background:#8B0000; }
-.total { font-size:22px; color:darkred; text-align:center; font-weight:bold; }
-.note { font-size:16px; color:#555; background:#fff3cd; }
+body{font-family:"Microsoft JhengHei",Arial,sans-serif;padding:20px;background:#f9f9f9;}
+h1{text-align:center;color:#8B0000;}
+table{border-collapse:collapse;width:100%;margin-top:20px;}
+th,td{border:1px solid #ccc;padding:8px;text-align:center;}
+th{background:#f2f2f2;}
+button{padding:10px 15px;margin:10px 5px;font-size:16px;}
 </style>
 </head>
-
 <body>
+<h1>龍天宮 管理版報名資料</h1>
 
-<h1>
-龍天宮 2026 年度<br>
-光明燈・太歲・祭改 祈福報名表
-</h1>
+<table id="registrationTable">
+<thead>
+<tr>
+<th>姓名</th><th>活動</th><th>光明燈類型</th><th>金額</th><th>新人</th><th>備註</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
 
-<div class="box">
-<label>聯絡人姓名</label>
-<input id="contactName">
-<label>聯絡電話</label>
-<input id="phone">
+<div id="stats" style="margin-top:20px;">
+<strong>統計：</strong><br>
+光明燈人數：<span id="lightCount">0</span> 人，總額 <span id="lightTotal">0</span> 元<br>
+太歲人數：<span id="taiSuiCount">0</span> 人，總額 <span id="taiSuiTotal">0</span> 元<br>
+祭改人數：<span id="jiGaiCount">0</span> 人，總額 <span id="jiGaiTotal">0</span> 元<br>
+新人數量：<span id="newCount">0</span> 人<br>
+總金額：<span id="grandTotal">0</span> 元
 </div>
 
-<div class="box">
-<h3>光明燈（300 元／人）</h3>
-<div id="light"></div>
-<button class="add" onclick="addLight()">➕ 新增人員</button>
-</div>
-
-<div class="box">
-<h3>太歲（300 元／人）</h3>
-<div id="taisui"></div>
-<button class="add" onclick="addPerson('taisui')">➕ 新增人員</button>
-</div>
-
-<div class="box">
-<h3>祭改（300 元／人）</h3>
-<div id="jigai"></div>
-<button class="add" onclick="addPerson('jigai')">➕ 新增人員</button>
-</div>
-
-<div class="box">
-<h3>新人專用補資料（第一次參加・300 元／人）</h3>
-<div id="newbie"></div>
-<button class="add" onclick="addNewbie()">➕ 新增新人資料</button>
-</div>
-
-<div class="box total">
-合計金額：<span id="grand">0</span> 元
-</div>
-
-<div class="box">
-<button onclick="sendLine()">送出並傳送 LINE</button>
-</div>
-
-<div class="box note">
-<strong>⚠️ 備註說明</strong><br>
-若是第一次參加，請務必提供以下完整資料：<br>
-姓名、農曆出生年月日、出生時辰
-</div>
+<button onclick="exportCSV()">匯出 CSV</button>
 
 <script>
-/* ===== 年度設定（只改這裡） ===== */
-const TEMPLE_YEAR = 2026;
+// Google Sheets API
+const SHEET_ID = "你的 Google Sheet ID";
+const API_KEY = "你的 API Key";
+const SHEET_NAME = "工作表1";
 
-/* ===== 金額設定 ===== */
-const PRICE = {
-  light:300,
-  taisui:300,
-  jigai:300,
-  newbie:300
-};
+function fetchData() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+  fetch(url)
+  .then(res=>res.json())
+  .then(data=>{
+    const rows = data.values.slice(1); // 去掉標題
+    const tbody = document.querySelector("#registrationTable tbody");
+    tbody.innerHTML = "";
+    let stats={light:0,taiSui:0,jiGai:0,newCount:0,total:0,lightTotal:0,taiSuiTotal:0,jiGaiTotal:0};
 
-/* ===== 天干地支 ===== */
-const stems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
-const branches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+    rows.forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td>`;
+      tbody.appendChild(tr);
 
-function toGanzhi(roc){
-  const y = Number(roc) + 1911;
-  return stems[(y-4)%10] + branches[(y-4)%12] + "年";
-}
+      const amount = Number(r[3]);
+      stats.total += amount;
+      if(r[1]==="光明燈"){ stats.light++; stats.lightTotal += amount; }
+      if(r[1]==="太歲"){ stats.taiSui++; stats.taiSuiTotal += amount; }
+      if(r[1]==="祭改"){ stats.jiGai++; stats.jiGaiTotal += amount; }
+      if(r[4]==="是") stats.newCount++;
+    });
 
-/* ===== 新增欄位 ===== */
-function addLight(){
-  const d = document.createElement("div");
-  d.className="person";
-  d.innerHTML=`
-    <label>姓名</label>
-    <input class="name" oninput="calc()">
-    <label>民國年</label>
-    <input class="year" type="number" oninput="calc()">
-    <label>光明燈類型</label>
-    <select class="type" oninput="calc()">
-      <option value="">（請選擇或自填）</option>
-      <option value="光明">光明</option>
-      <option value="財利">財利</option>
-      <option value="文昌">文昌</option>
-      <option value="元神">元神</option>
-    </select>
-    <input class="custom" placeholder="其他類型（可自填）" oninput="calc()">
-  `;
-  light.appendChild(d);
-}
-
-function addPerson(type){
-  const d = document.createElement("div");
-  d.className="person";
-  d.innerHTML=`
-    <label>姓名</label>
-    <input class="name" oninput="calc()">
-    <label>民國年</label>
-    <input class="year" type="number" oninput="calc()">
-  `;
-  document.getElementById(type).appendChild(d);
-}
-
-function addNewbie(){
-  const d = document.createElement("div");
-  d.className="person";
-  d.innerHTML=`
-    <label>姓名</label>
-    <input class="name" oninput="calc()">
-    <label>農曆出生年月日</label>
-    <input class="lunar" placeholder="例：80年5月12日" oninput="calc()">
-    <label>出生時辰</label>
-    <input class="time" placeholder="例：子時">
-  `;
-  newbie.appendChild(d);
-}
-
-/* ===== 金額計算 ===== */
-function validCount(type){
-  let n = 0;
-  document.querySelectorAll(`#${type} .person`).forEach(p=>{
-    if(p.querySelector(".name")?.value && p.querySelector(".year")?.value) n++;
+    document.getElementById("lightCount").innerText = stats.light;
+    document.getElementById("lightTotal").innerText = stats.lightTotal;
+    document.getElementById("taiSuiCount").innerText = stats.taiSui;
+    document.getElementById("taiSuiTotal").innerText = stats.taiSuiTotal;
+    document.getElementById("jiGaiCount").innerText = stats.jiGai;
+    document.getElementById("jiGaiTotal").innerText = stats.jiGaiTotal;
+    document.getElementById("newCount").innerText = stats.newCount;
+    document.getElementById("grandTotal").innerText = stats.total;
   });
-  return n;
 }
 
-function validNewbieCount(){
-  let n = 0;
-  document.querySelectorAll("#newbie .person").forEach(p=>{
-    if(p.querySelector(".name").value && p.querySelector(".lunar").value) n++;
+// 匯出 CSV
+function exportCSV(){
+  const rows = document.querySelectorAll("#registrationTable tbody tr");
+  let csv="姓名,活動,光明燈類型,金額,新人,備註\n";
+  rows.forEach(tr=>{
+    const cols=tr.querySelectorAll("td");
+    csv += Array.from(cols).map(td=>td.innerText).join(",") + "\n";
   });
-  return n;
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(blob);
+  link.download="報名資料.csv";
+  link.click();
 }
 
-function calc(){
-  let total = 0;
-  total += validCount("light") * PRICE.light;
-  total += validCount("taisui") * PRICE.taisui;
-  total += validCount("jigai") * PRICE.jigai;
-  total += validNewbieCount() * PRICE.newbie;
-  grand.innerText = total;
-}
-
-/* ===== LINE 輸出 ===== */
-function sectionLight(){
-  let txt = "◎ 光明燈\n", n=0;
-  document.querySelectorAll("#light .person").forEach(p=>{
-    const name=p.querySelector(".name").value;
-    const year=p.querySelector(".year").value;
-    const kind=p.querySelector(".custom").value || p.querySelector(".type").value || "一般";
-    if(name && year){
-      txt+=`  ${name}　民國${year}年　${toGanzhi(year)}　【${kind}】\n`;
-      n++;
-    }
-  });
-  return n?txt+`  小計：${n*PRICE.light} 元\n\n`:"";
-}
-
-function section(type,title){
-  let txt=`◎ ${title}\n`, n=0;
-  document.querySelectorAll(`#${type} .person`).forEach(p=>{
-    const name=p.querySelector(".name").value;
-    const year=p.querySelector(".year").value;
-    if(name && year){
-      txt+=`  ${name}　民國${year}年　${toGanzhi(year)}\n`;
-      n++;
-    }
-  });
-  return n?txt+`  小計：${n*PRICE[type]} 元\n\n`:"";
-}
-
-function sectionNewbie(){
-  let txt="◎ 新人補資料\n", n=0;
-  document.querySelectorAll("#newbie .person").forEach(p=>{
-    const name=p.querySelector(".name").value;
-    const lunar=p.querySelector(".lunar").value;
-    const time=p.querySelector(".time").value||"未填";
-    if(name && lunar){
-      txt+=`  ${name}　農曆${lunar}　${time}\n`;
-      n++;
-    }
-  });
-  return n?txt+`  小計：${n*PRICE.newbie} 元\n\n`:"";
-}
-
-function sendLine(){
-  if(!contactName.value||!phone.value){
-    alert("請填寫聯絡人與電話");
-    return;
-  }
-  let msg =
-`【龍天宮 ${TEMPLE_YEAR} 年度 祈福報名表】
-聯絡人：${contactName.value}
-電話：${phone.value}
-────────────────
-`;
-  msg+=sectionLight();
-  msg+=section("taisui","太歲");
-  msg+=section("jigai","祭改");
-  msg+=sectionNewbie();
-  msg+=`────────────────
-合計金額：${grand.innerText} 元`;
-
-  window.open(
-    "https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(msg),
-    "_blank"
-  );
-}
+fetchData();
 </script>
-
 </body>
 </html>
