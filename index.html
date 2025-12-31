@@ -11,10 +11,10 @@ h1{text-align:center;color:#8B0000;font-size:22px;margin-bottom:15px}
 .section{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px}
 h2{font-size:18px;margin:0 0 10px;color:#333}
 label{font-size:16px;margin-top:8px;display:block}
-input,select{width:100%;font-size:16px;padding:8px;margin-top:4px}
+input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-top:4px}
 .item{border-top:1px dashed #ddd;margin-top:10px;padding-top:10px}
-.add{background:#8B0000;color:#fff;border:none;border-radius:6px;padding:10px;font-size:16px;width:100%;margin-top:10px}
-.submit{background:#06C755;color:#fff;border:none;border-radius:8px;padding:14px;font-size:18px;width:100%}
+.add{background:#8B0000;color:#fff;border:none;border-radius:6px;padding:10px;font-size:16px;width:100%;margin-top:10px;cursor:pointer}
+.submit{background:#06C755;color:#fff;border:none;border-radius:8px;padding:14px;font-size:18px;width:100%;cursor:pointer}
 .total{text-align:center;font-size:20px;color:darkred;font-weight:bold}
 .note{font-size:14px;color:#555;background:#fff3cd;border-radius:8px;padding:10px}
 </style>
@@ -50,7 +50,7 @@ input,select{width:100%;font-size:16px;padding:8px;margin-top:4px}
 </div>
 
 <div class="section">
-<h2>🧾 第一次參加補資料</h2>
+<h2>🧾 第一次參加補資料 (不計費)</h2>
 <div id="newbie"></div>
 <button class="add" onclick="addNewbie()">＋ 新增</button>
 </div>
@@ -62,10 +62,8 @@ input,select{width:100%;font-size:16px;padding:8px;margin-top:4px}
 <button class="submit" onclick="sendLine()">送出並傳送 LINE</button>
 
 <div class="note" style="margin-top:15px">
-⚠️ 若是第一次參加，請在第一次參加補資料填入姓名、農曆出生年月日、出生時辰及光明燈/太歲/祭改，但上面光明燈/太歲/祭改不用填避免重覆計算金額：<br>
-
-⚠️報名後，請利用官方Line討論<br>
-
+⚠️ 若是第一次參加的人，上方光明燈/太歲/祭改區塊仍需填寫，並在第一次參加補資料填入姓名、農曆出生年月日、出生時辰及欲報名項目，以利資料完整建檔。<br>
+⚠️ 報名後，請利用官方Line討論。<br>
 ⚠️各燈名其代表意義<br>
   
 文昌燈：祈求智慧大開、學業進步。適合學生、考生、公務員或是需要不斷考取證照的人。<br>
@@ -79,103 +77,124 @@ input,select{width:100%;font-size:16px;padding:8px;margin-top:4px}
 元辰燈：祈求「元辰光彩」，即個人生命力的強弱。適合穩固本神、增強能量，達到消災解厄、不讓外邪侵擾的效果。<br>
   
 運途燈：祈求流年運勢轉好、出外逢貴。適合正處於低潮、或需要轉換跑道的人。<br>
-  
 </div>
 
 <script>
 const YEAR=2026;
-const PRICE={light:300,taisui:300,jigai:300,newbie:300};
+const PRICE={light:300,taisui:300,jigai:300};
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
 function gz(y){y=+y+1911;return stems[(y-4)%10]+branches[(y-4)%12]+"年"}
 
+// 使用 insertAdjacentHTML 確保不重刷內容
 function addLight(){
-  light.innerHTML+=`
+  const html = `
   <div class="item">
     <label>姓名</label><input class="n">
     <label>民國年</label><input class="y" type="number">
     <label>類型</label>
     <select class="t">
-      <option value="">文昌</option>
-      <option>財利</option><option>婚姻</option>
-      <option>平安</option><option>元辰</option>
-      <option>運途</option>
+      <option value="文昌">文昌</option>
+      <option value="財利">財利</option>
+      <option value="婚姻">婚姻</option>
+      <option value="平安">平安</option>
+      <option value="元辰">元辰</option>
+      <option value="運途">運途</option>
     </select>
     <input class="c" placeholder="其他可自填">
   </div>`;
+  document.getElementById('light').insertAdjacentHTML('beforeend', html);
 }
 
 function addSimple(id){
-  document.getElementById(id).innerHTML+=`
+  const html = `
   <div class="item">
     <label>姓名</label><input class="n">
     <label>民國年</label><input class="y" type="number">
   </div>`;
+  document.getElementById(id).insertAdjacentHTML('beforeend', html);
 }
 
 function addNewbie(){
-  newbie.innerHTML+=`
+  const html = `
   <div class="item">
     <label>姓名</label><input class="n">
-    <label>農曆出生年生日</label><input class="l">
-    <label>時辰</label><input class="t">
-    <label>光明燈</label><input class="t">
-    <label>太歲</label><input class="t">
-    <label>祭改</label><input class="t">
+    <label>農曆出生年月日</label><input class="l" placeholder="例：70年1月1日">
+    <label>時辰</label><input class="time" placeholder="例：吉時">
+    <label>預約項目</label><input class="items" placeholder="例：光明燈(文昌)、祭改">
   </div>`;
+  document.getElementById('newbie').insertAdjacentHTML('beforeend', html);
 }
 
 function calc(){
   let t=0;
+  // 僅計算 light, taisui, jigai 三個區塊
   ["light","taisui","jigai"].forEach(id=>{
     document.querySelectorAll(`#${id} .item`).forEach(i=>{
-      if(i.querySelector(".n")?.value && i.querySelector(".y")?.value) t+=PRICE[id];
+      // 只要姓名與年份有填，就計費
+      if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
+        t += PRICE[id];
+      }
     });
   });
-  document.querySelectorAll("#newbie .item").forEach(i=>{
-    if(i.querySelector(".n").value && i.querySelector(".l").value) t+=PRICE.newbie;
-  });
-  grand.innerText=t;
+  // newbie 區塊不再加入 t 的計算
+  document.getElementById('grand').innerText = t;
 }
 
-document.body.addEventListener("input",calc);
+// 監聽輸入即時更新金額
+document.body.addEventListener("input", calc);
 
 function sendLine(){
-  if(!contactName.value||!phone.value){alert("請填聯絡資料");return;}
-  let m=`【龍天宮 ${YEAR} 年度 祈福報名表】
-聯絡人：${contactName.value}
-電話：${phone.value}
-────────────────
-`;
+  if(!document.getElementById('contactName').value || !document.getElementById('phone').value){
+    alert("請填聯絡資料");
+    return;
+  }
+  
+  let m=`【龍天宮 ${YEAR} 年度 祈福報名表】\n`;
+  m+=`聯絡人：${document.getElementById('contactName').value}\n`;
+  m+=`電話：${document.getElementById('phone').value}\n`;
+  m+=`────────────────\n`;
 
+  // 光明燈資料
   document.querySelectorAll("#light .item").forEach(i=>{
-    if(i.querySelector(".n").value&&i.querySelector(".y").value){
-      let k=i.querySelector(".c").value||i.querySelector(".t").value||"一般";
-      m+=`光明燈 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value} ${gz(i.querySelector(".y").value)}【${k}】\n`;
+    const name = i.querySelector(".n").value;
+    const year = i.querySelector(".y").value;
+    if(name && year){
+      let k = i.querySelector(".c").value || i.querySelector(".t").value;
+      m+=`光明燈 ${name} 民國${year} ${gz(year)}【${k}】\n`;
     }
   });
 
+  // 太歲與祭改資料
   [["taisui","太歲"],["jigai","祭改"]].forEach(a=>{
     document.querySelectorAll(`#${a[0]} .item`).forEach(i=>{
-      if(i.querySelector(".n").value&&i.querySelector(".y").value){
-        m+=`${a[1]} ${i.querySelector(".n").value} 民國${i.querySelector(".y").value} ${gz(i.querySelector(".y").value)}\n`;
+      const name = i.querySelector(".n").value;
+      const year = i.querySelector(".y").value;
+      if(name && year){
+        m+=`${a[1]} ${name} 民國${year} ${gz(year)}\n`;
       }
     });
   });
 
+  // 新人資料
   document.querySelectorAll("#newbie .item").forEach(i=>{
-    if(i.querySelector(".n").value&&i.querySelector(".l").value){
-      m+=`新人 ${i.querySelector(".n").value} 農曆${i.querySelector(".l").value} ${i.querySelector(".t").value||""}\n`;
+    const name = i.querySelector(".n").value;
+    const lunar = i.querySelector(".l").value;
+    if(name && lunar){
+      m+=`[新人] ${name} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
     }
   });
 
-  m+=`────────────────
-合計金額：${grand.innerText} 元`;
+  m+=`────────────────\n`;
+  m+=`合計金額：${document.getElementById('grand').innerText} 元`;
 
-  window.open("https://line.me/R/oaMessage/@813bpsag/?"+encodeURIComponent(m));
+  window.open("https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m));
 }
 </script>
 
 </body>
 </html>
+
+
+
