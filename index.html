@@ -194,7 +194,7 @@ function sendLine(){
     const name = i.querySelector(".n").value;
     const lunar = i.querySelector(".l").value;
     if(name && lunar){
-      m+=`[新增或修改] 選項:${i.querySelector(".choice").value} ${name} ${Ad} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
+      m+=`[新增或修改] ${choice} ${name} ${Ad} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
     }
   });
 
@@ -235,7 +235,7 @@ function sendLine(){
     const name=i.querySelector(".n").value;
     const lunar=i.querySelector(".l").value;
     if(name && lunar){
-      m+=`[新增或修改] 選項:${i.querySelector(".choice").value} ${name} ${Ad} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
+      m+=`[新增或修改] ${choice} ${name} ${Ad} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
     }
   });
 
