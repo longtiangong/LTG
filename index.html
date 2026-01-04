@@ -54,7 +54,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 </div>
 
 <div class="section">
-<h2>🧾 第一次參加新增資料或是現有個人資料更新</h2>
+<h2>🧾 新增資料或資料更新</h2>
 <div id="newbie"></div>
 <button class="add" onclick="addNewbie()">＋ 新增</button>
 </div>
@@ -125,6 +125,11 @@ function addSimple(id){
 function addNewbie(){
   const html = `
   <div class="item">
+    <label>類型</label>
+    <select class="t">
+      <option value="新增">新增</option>
+      <option value="更新">更新</option>
+    </select>
     <label>姓名</label><input class="n">
     <label>地址</label><input class="Ad">
     <label>農曆出生年月日</label><input class="l" placeholder="例：70年1月1日">
@@ -189,7 +194,7 @@ function sendLine(){
     const name = i.querySelector(".n").value;
     const lunar = i.querySelector(".l").value;
     if(name && lunar){
-      m+=`[新人] ${name} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
+      m+=`[新增或修改] ${name} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
     }
   });
 
@@ -202,5 +207,4 @@ function sendLine(){
 
 </body>
 </html>
-
 
