@@ -125,8 +125,8 @@ function addSimple(id){
 function addNewbie(){
   const html = `
   <div class="item">
-    <label>類型</label>
-    <select class="t">
+    <label>選項</label>
+    <select class="choice">
       <option value="新增">新增</option>
       <option value="更新">更新</option>
     </select>
@@ -189,12 +189,12 @@ function sendLine(){
     });
   });
 
-  // 新人資料
+  // 新增或修改資料
   document.querySelectorAll("#newbie .item").forEach(i=>{
     const name = i.querySelector(".n").value;
     const lunar = i.querySelector(".l").value;
     if(name && lunar){
-      m+=`[新增或修改] ${name} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
+      m+=`[新增或修改] 選項:${i.querySelector(".choice").value} ${name} ${Ad} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
     }
   });
 
@@ -235,7 +235,7 @@ function sendLine(){
     const name=i.querySelector(".n").value;
     const lunar=i.querySelector(".l").value;
     if(name && lunar){
-      m+=`[新增/更新] ${name} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
+       m+=`[新增或修改] 選項:${i.querySelector(".choice").value} ${name} ${Ad} 農曆:${lunar} 時辰:${i.querySelector(".time").value} 項目:${i.querySelector(".items").value}\n`;
     }
   });
 
