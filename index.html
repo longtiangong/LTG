@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V1<br>
+<h1>龍天宮 2026 年度-V2<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -51,6 +51,12 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 <h2>🔥 祭改（300 元）</h2>
 <div id="jigai"></div>
 <button class="add" onclick="addSimple('jigai')">＋ 新增</button>
+</div>
+
+<div class="section">
+<h2>🌟 平安斗（1000 元）</h2>
+<div id="peace"></div>
+<button class="add" onclick="addPeace()">＋ 新增</button>
 </div>
 
 <div class="section">
@@ -112,6 +118,24 @@ function addLight(){
   </div>`;
   document.getElementById('light').insertAdjacentHTML('beforeend', html);
 }
+function addPeace(){
+  peace.insertAdjacentHTML('beforeend',`
+  <div class="item">
+    <label>姓名</label><input class="n">    
+    <label>斗別</label>
+    <select class="t" onchange="peaceWarn(this)">
+      <option value="福德正神">福德正神</option>
+      <option value="其他神明">其他神明（請回宮擲筊）</option>
+    </select>
+    <div class="warn">⚠️ 本項目需回宮擲筊確認，請於送出後與本宮聯繫。</div>
+    <label>民國出生年(選福德正神在填，其他神明則不用填寫)</label><input class="y" type="number">
+  </div>`);
+}
+
+function peaceWarn(sel){
+  const warn = sel.parentElement.querySelector('.warn');
+  warn.style.display = sel.value === "其他神明" ? "block" : "none";
+}
 
 function addSimple(id){
   const html = `
@@ -141,8 +165,8 @@ function addNewbie(){
 
 function calc(){
   let t=0;
-  // 僅計算 light, taisui, jigai 三個區塊
-  ["light","taisui","jigai"].forEach(id=>{
+  // 僅計算 light, taisui, jigai peace四個區塊
+  ["light","taisui","jigai","peace"].forEach(id=>{
     document.querySelectorAll(`#${id} .item`).forEach(i=>{
       // 只要姓名與年份有填，就計費
       if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
@@ -188,7 +212,11 @@ function sendLine(){
       }
     });
   });
-
+  // 平安斗資料
+   document.querySelectorAll("#peace .item").forEach(i=>{
+    if(i.querySelector(".n").value)
+      m+=`平安斗 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
+  });
   // 新增或修改資料
 document.querySelectorAll("#newbie .item").forEach(i=>{
   const type = i.querySelector(".t").value;      // 新增 / 更新
