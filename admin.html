@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V2<br>
+<h1>龍天宮 2026 年度-V3<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -231,14 +231,17 @@ function sendLine(){
       }
     });
   });
+// 五大主斗資料（不使用 value）
+document.querySelectorAll("#peace5M .item").forEach(i=>{
+  const name = i.querySelector(".n").value;
+  const year = i.querySelector(".y").value;
+  const sel  = i.querySelector(".t");
+  const斗別 = sel.options[sel.selectedIndex].text;
 
-  // 五大主斗資料
-   document.querySelectorAll("#peace5M .item").forEach(i=>{
-    const name = i.querySelector(".n").value;
-    const year = i.querySelector(".y").value;     
-    if(i.querySelector(".n").value)
-      m+=`五大主斗 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
-  });
+  if(name && year && sel.selectedIndex > 0){
+    m+=`五大主斗 ${name} 民國${year} ${gz(year)}【${斗別}】\n`;
+  }
+});
 
   // 平安年斗6000元資料
    document.querySelectorAll("#peace6T .item").forEach(i=>{
