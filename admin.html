@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V0121<br>
+<h1>龍天宮 2026 年度-V1<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -148,8 +148,11 @@ function addPeace5M(){
     <label>姓名</label><input class="n">    
     <label>斗別</label>
     <select class="t" onchange="peaceWarn(this)">
-      <option value="五大主斗">五大主斗(大上帝/二上帝/中殿/天上聖母/財神爺)（只剩中殿，有意者請回宮擲筊）</option>
-      
+      <option value="五大主斗">大上帝(名額已滿）</option>
+      <option value="五大主斗">二上帝(名額已滿）</option>
+      <option value="五大主斗">中殿(有意者請回宮或請人代擲筊）</option>
+      <option value="五大主斗">天上聖母(名額已滿）</option>
+      <option value="五大主斗">財神爺(名額已滿）</option>
     </select>
     <div class="warn">⚠️ 本項目需回宮擲筊確認</div>
     </div>`);
@@ -162,7 +165,9 @@ function addPeace6T(){
     <label>斗別</label>
     <select class="t" onchange="peaceWarn(this)">
       <option value="玄天上帝">玄天上帝</option> 
-      <option value="玉皇大帝">玉皇大帝</option>           
+      <option value="玉皇大帝">玉皇大帝</option> 
+      <option value="三官大帝">三官大帝</option> 
+      <option value="斗姥星君">斗姥星君</option>          
     </select>
     <label>民國出生年</label><input class="y" type="number">
   </div>`);
@@ -175,7 +180,13 @@ function addPeace5T(){
     <label>斗別</label>
     <select class="t" onchange="peaceWarn(this)">
       <option value="天上聖母">天上聖母</option> 
-      <option value="關聖帝君">關聖帝君</option>           
+      <option value="關聖帝君">關聖帝君</option> 
+      <option value="文昌帝君">文昌帝君</option> 
+      <option value="觀音佛祖">觀音佛祖</option>  
+      <option value="五穀大帝">五穀大帝</option>  
+      <option value="九天玄女">九天玄女</option>  
+      <option value="武財神爺">武財神爺</option> 
+      <option value="城隍爺">城隍爺</option>
     </select>
     <label>民國出生年</label><input class="y" type="number">
   </div>`);
@@ -189,7 +200,13 @@ function addPeace3T(){
     <label>斗別</label>
     <select class="t" onchange="peaceWarn(this)">
       <option value="陳靖姑">陳靖姑</option>  
-      <option value="張天師">張天師</option>          
+      <option value="張天師">張天師</option> 
+      <option value="中壇元帥">中壇元帥</option>  
+      <option value="註身娘娘">註身娘娘</option>  
+      <option value="地藏王菩薩">地藏王菩薩</option>  
+      <option value="池府千歲">池府千歲</option> 
+      <option value="法主聖君">法主聖君</option> 
+      <option value="濟公禪師">濟公禪師</option> 
     </select>
     <label>民國出生年</label><input class="y" type="number">
   </div>`);
