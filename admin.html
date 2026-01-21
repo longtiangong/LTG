@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V1<br>
+<h1>龍天宮 2026 年度-V2<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -117,7 +117,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <script>
 const YEAR=2026;
-const PRICE={light:300,taisui:300,jigai:300,peace6T:6000,peace5T:5000,peace3T:3000,peace1T:1000};
+const PRICE={light:300,taisui:300,jigai:300,peace5M:0,peace6T:6000,peace5T:5000,peace3T:3000,peace1T:1000};
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
@@ -154,6 +154,7 @@ function addPeace5M(){
       <option value="五大主斗">天上聖母(名額已滿）</option>
       <option value="五大主斗">財神爺(名額已滿）</option>
     </select>
+    <label>民國出生年</label><input class="y" type="number">
     <div class="warn">⚠️ 本項目需回宮擲筊確認</div>
     </div>`);
 }
@@ -257,8 +258,8 @@ function addNewbie(){
 
 function calc(){
   let t=0;
-  // 僅計算 light, taisui, jigai, peace6T, peace5T, peace3T, peace1T七個區塊
-  ["light","taisui","jigai","peace6T","peace5T","peace3T","peace1T"].forEach(id=>{
+  // 僅計算 light, taisui, jigai, peace5M, peace6T, peace5T, peace3T, peace1T八個區塊
+  ["light","taisui","jigai","peace5M","peace6T","peace5T","peace3T","peace1T"].forEach(id=>{
     document.querySelectorAll(`#${id} .item`).forEach(i=>{
       // 只要姓名與年份有填，就計費
       if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
@@ -308,8 +309,9 @@ function sendLine(){
   // 五大主斗資料
    document.querySelectorAll("#peace5M .item").forEach(i=>{
     const name = i.querySelector(".n").value;   
+    const year = i.querySelector(".y").value;     
     if(i.querySelector(".n").value)
-      m+=`五大主斗 ${i.querySelector(".n").value}【${i.querySelector(".t").value}】\n`;
+      m+=`五大主斗(要擲筊) ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
   });
 
   // 平安年斗6000元資料
