@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度<br>
+<h1>龍天宮 2026 年度-V1<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -284,6 +284,14 @@ function sendLine(){
       }
     });
   });
+  
+ // 五大主斗資料
+   document.querySelectorAll("#peace5M .item").forEach(i=>{
+    const name = i.querySelector(".n").value;   
+    if(i.querySelector(".n").value)
+      m+=`五大主斗 ${i.querySelector(".n").value} ${i.querySelector(".t").value}】\n`;
+  });
+  
   // 平安年斗6000元資料
    document.querySelectorAll("#peace6T .item").forEach(i=>{
     const name = i.querySelector(".n").value;
