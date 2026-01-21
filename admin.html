@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V2<br>
+<h1>龍天宮 2026 年度-V3<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -54,9 +54,9 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 </div>
 
 <div class="section">
-<h2>🌟 平安斗（1000 元）</h2>
-<div id="peace"></div>
-<button class="add" onclick="addPeace()">＋ 新增</button>
+<h2>🌟 平安年斗 (6000 元）</h2>
+<div id="6Tpeace"></div>
+<button class="add" onclick="add6TPeace()">＋ 新增</button>
 </div>
 
 <div class="section">
@@ -93,7 +93,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <script>
 const YEAR=2026;
-const PRICE={light:300,taisui:300,jigai:300, peace:1000};
+const PRICE={light:300,taisui:300,jigai:300, 6Tpeace:6000};
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
@@ -118,8 +118,8 @@ function addLight(){
   </div>`;
   document.getElementById('light').insertAdjacentHTML('beforeend', html);
 }
-function addPeace(){
-  peace.insertAdjacentHTML('beforeend',`
+function add6TPeace(){
+  6Tpeace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
@@ -165,8 +165,8 @@ function addNewbie(){
 
 function calc(){
   let t=0;
-  // 僅計算 light, taisui, jigai, peace四個區塊
-  ["light","taisui","jigai","peace"].forEach(id=>{
+  // 僅計算 light, taisui, jigai, 6Tpeace四個區塊
+  ["light","taisui","jigai","6Tpeace"].forEach(id=>{
     document.querySelectorAll(`#${id} .item`).forEach(i=>{
       // 只要姓名與年份有填，就計費
       if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
@@ -213,7 +213,7 @@ function sendLine(){
     });
   });
   // 平安斗資料
-   document.querySelectorAll("#peace .item").forEach(i=>{
+   document.querySelectorAll("#6Tpeace .item").forEach(i=>{
      const name = i.querySelector(".n").value;
      const year = i.querySelector(".y").value;
     if(i.querySelector(".n").value)
