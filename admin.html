@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V1<br>
+<h1>龍天宮 2026 年度-V2<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -54,15 +54,9 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 </div>
 
 <div class="section">
-<h2>🌟 五大主斗 </h2>
-<div id="5majorpeace"></div>
-<button class="add" onclick="add5majorPeace()">＋ 新增</button>
-</div>
-
-<div class="section">
-<h2>🌟 平安年斗 (6000 元）</h2>
-<div id="6Tpeace"></div>
-<button class="add" onclick="add6TPeace()">＋ 新增</button>
+<h2>🌟 平安斗（1000 元）</h2>
+<div id="peace"></div>
+<button class="add" onclick="addPeace()">＋ 新增</button>
 </div>
 
 <div class="section">
@@ -90,7 +84,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
   
 婚姻燈：祈求良緣早顯、家庭和諧。適合單身者祈求遇到正緣，脫離單身；有伴侶者祈求感情增溫，化解衝突；已婚者： 祈求夫妻相處圓滿，家庭生活和諧。<br>
   
-光明燈/平安燈：祈求全家大小出入平安、無災無難。適合不求大富大貴，但求日子過得安穩順遂。長輩、小孩或是一般家庭來說，是每年必點的保平安首選。<br>
+平安燈：祈求全家大小出入平安、無災無難。適合不求大富大貴，但求日子過得安穩順遂。長輩、小孩或是一般家庭來說，是每年必點的保平安首選。<br>
   
 元辰燈：祈求「元辰光彩」，即個人生命力的強弱。適合穩固本神、增強能量，達到消災解厄、不讓外邪侵擾的效果。<br>
   
@@ -99,7 +93,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <script>
 const YEAR=2026;
-const PRICE={light:300,taisui:300,jigai:300,6Tpeace:6000};
+const PRICE={light:300,taisui:300,jigai:300, peace:1000};
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
@@ -111,12 +105,12 @@ function addLight(){
   <div class="item">
     <label>姓名</label><input class="n">
     <label>民國出生年</label><input class="y" type="number">
-    <label>類型(同一人不同類型燈名，請填兩次)</label>
+    <label>類型</label>
     <select class="t">
       <option value="文昌">文昌</option>
       <option value="財利">財利</option>
       <option value="婚姻">婚姻</option>
-      <option value="光明/平安">光明/平安</option>
+      <option value="平安">平安</option>
       <option value="元辰">元辰</option>
       <option value="運途">運途</option>
     </select>
@@ -124,35 +118,23 @@ function addLight(){
   </div>`;
   document.getElementById('light').insertAdjacentHTML('beforeend', html);
 }
-function add5majorPeace(){
-  5majorpeace.insertAdjacentHTML('beforeend',`
+function addPeace(){
+  peace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
-    <select class="t" onchange="peaceWarn(this)">
-      <option value="五大主斗">五大主斗(大上帝/二上帝/中殿/天上聖母/財神爺)（只剩中殿，有意者請回宮擲筊）</option>
-      
+    <select class="t" onchange="peaceWarn(this)">      
+      <option value="其他神明">其他神明（請回宮擲筊）</option>
+      <option value="福德正神">福德正神 (請於送出後與本宮聯繫)</option>
     </select>
     <div class="warn">⚠️ 本項目需回宮擲筊確認</div>
-    </div>`);
-}
-
-function add6TPeace(){
-  6Tpeace.insertAdjacentHTML('beforeend',`
-  <div class="item">
-    <label>姓名</label><input class="n">    
-    <label>斗別</label>
-    <select class="6T">
-      <option value="玄天上帝">玄天上帝</option>
-      <option value="玉皇大帝">玉皇大帝</option>
-    </select>
-    <label>民國出生年</label><input class="y" type="number">
+    <label>民國出生年(選福德正神在填，其他神明則不用填寫)</label><input class="y" type="number">
   </div>`);
 }
 
 function peaceWarn(sel){
   const warn = sel.parentElement.querySelector('.warn');
-  warn.style.display = sel.value === "五大主斗" ? "block" : "none";
+  warn.style.display = sel.value === "其他神明" ? "block" : "none";
 }
 
 function addSimple(id){
@@ -183,8 +165,8 @@ function addNewbie(){
 
 function calc(){
   let t=0;
-  // 僅計算 light, taisui, jigai, 6Tpeace七個區塊
-  ["light","taisui","jigai","6Tpeace"].forEach(id=>{
+  // 僅計算 light, taisui, jigai, peace四個區塊
+  ["light","taisui","jigai","peace"].forEach(id=>{
     document.querySelectorAll(`#${id} .item`).forEach(i=>{
       // 只要姓名與年份有填，就計費
       if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
@@ -230,15 +212,13 @@ function sendLine(){
       }
     });
   });
-  // 平安年斗6000元資料
-   document.querySelectorAll("#6Tpeace .item").forEach(i=>{
-    const name = i.querySelector(".n").value;
-    const year = i.querySelector(".y").value;     
+  // 平安斗資料
+   document.querySelectorAll("#peace .item").forEach(i=>{
+     const name = i.querySelector(".n").value;
+     const year = i.querySelector(".y").value;
     if(i.querySelector(".n").value)
-      m+=`平安年斗6000元 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".6T").value}】\n`;
+      m+=`平安斗 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
   });
-
-
   // 新增或修改資料
 document.querySelectorAll("#newbie .item").forEach(i=>{
   const type = i.querySelector(".t").value;      // 新增 / 更新
