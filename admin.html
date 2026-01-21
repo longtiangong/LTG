@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V0<br>
+<h1>龍天宮 2026 年度-V1<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -55,8 +55,8 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <div class="section">
 <h2>🌟 平安年斗 (6000 元）</h2>
-<div id="6Tpeace"></div>
-<button class="add" onclick="add6TPeace()">＋ 新增</button>
+<div id="6tpeace"></div>
+<button class="add" onclick="add6tPeace()">＋ 新增</button>
 </div>
 
 <div class="section">
@@ -93,7 +93,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <script>
 const YEAR=2026;
-const PRICE={light:300,taisui:300,jigai:300, 6Tpeace:6000};
+const PRICE={light:300,taisui:300,jigai:300, 6tpeace:6000};
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
@@ -118,12 +118,12 @@ function addLight(){
   </div>`;
   document.getElementById('light').insertAdjacentHTML('beforeend', html);
 }
-function add6TPeace(){
-  6Tpeace.insertAdjacentHTML('beforeend',`
+function add6tPeace(){
+  6tpeace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
-    <select class="t" onchange="6TpeaceWarn(this)">      
+    <select class="t" onchange="6tpeaceWarn(this)">      
       <option value="其他神明">其他神明（請回宮擲筊）</option>
       <option value="福德正神">福德正神 (請於送出後與本宮聯繫)</option>
     </select>
@@ -132,7 +132,7 @@ function add6TPeace(){
   </div>`);
 }
 
-function 6TpeaceWarn(sel){
+function 6tpeaceWarn(sel){
   const warn = sel.parentElement.querySelector('.warn');
   warn.style.display = sel.value === "其他神明" ? "block" : "none";
 }
@@ -213,7 +213,7 @@ function sendLine(){
     });
   });
   // 平安斗資料
-   document.querySelectorAll("#6Tpeace .item").forEach(i=>{
+   document.querySelectorAll("#6tpeace .item").forEach(i=>{
      const name = i.querySelector(".n").value;
      const year = i.querySelector(".y").value;
     if(i.querySelector(".n").value)
