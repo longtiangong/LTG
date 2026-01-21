@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V3<br>
+<h1>龍天宮 2026 年度<br>
   祈福報名<br>
   祭改日期：民國115年國曆二月八日(農曆十二月廿一日)星期日<br>
   開燈、開斗日期：民國115年國曆二月廿二日(農曆正月初六日)星期日<br>
@@ -156,7 +156,7 @@ function add5majorPeace(){
 }
 
 function add6TPeace(){
-  peace.insertAdjacentHTML('beforeend',`
+  6Tpeace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
@@ -168,7 +168,7 @@ function add6TPeace(){
 }
 
 function add5TPeace(){
-  peace.insertAdjacentHTML('beforeend',`
+  5Tpeace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
@@ -181,7 +181,7 @@ function add5TPeace(){
 
 
 function add3TPeace(){
-  peace.insertAdjacentHTML('beforeend',`
+  3Tpeace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
@@ -193,7 +193,7 @@ function add3TPeace(){
 }
 
 function add1TPeace(){
-  peace.insertAdjacentHTML('beforeend',`
+  1Tpeace.insertAdjacentHTML('beforeend',`
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
@@ -238,7 +238,7 @@ function addNewbie(){
 function calc(){
   let t=0;
   // 僅計算 light, taisui, jigai, 6Tpeace, 5Tpeace, 3Tpeace, 1Tpeace七個區塊
-  ["light","taisui","jigai","peace","XTSD"].forEach(id=>{
+  ["light","taisui","jigai","6Tpeace","5Tpeace","3Tpeace","1Tpeace"].forEach(id=>{
     document.querySelectorAll(`#${id} .item`).forEach(i=>{
       // 只要姓名與年份有填，就計費
       if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
@@ -284,13 +284,38 @@ function sendLine(){
       }
     });
   });
-  // 平安年斗資料
-   document.querySelectorAll("#peace .item").forEach(i=>{
+  // 平安年斗6000元資料
+   document.querySelectorAll("#6Tpeace .item").forEach(i=>{
     const name = i.querySelector(".n").value;
     const year = i.querySelector(".y").value;     
     if(i.querySelector(".n").value)
-      m+=`平安斗 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
+      m+=`平安年斗6000元 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
   });
+
+// 平安年斗5000元資料
+   document.querySelectorAll("#5Tpeace .item").forEach(i=>{
+    const name = i.querySelector(".n").value;
+    const year = i.querySelector(".y").value;     
+    if(i.querySelector(".n").value)
+      m+=`平安年斗5000元 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
+  });
+
+// 平安年斗3000元資料
+   document.querySelectorAll("#3Tpeace .item").forEach(i=>{
+    const name = i.querySelector(".n").value;
+    const year = i.querySelector(".y").value;     
+    if(i.querySelector(".n").value)
+      m+=`平安年斗3000元 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
+  });
+
+// 平安年斗1000元資料
+   document.querySelectorAll("#1Tpeace .item").forEach(i=>{
+    const name = i.querySelector(".n").value;
+    const year = i.querySelector(".y").value;     
+    if(i.querySelector(".n").value)
+      m+=`平安年斗1000元 ${i.querySelector(".n").value} 民國${i.querySelector(".y").value}【${i.querySelector(".t").value}】\n`;
+  });
+
   // 新增或修改資料
 document.querySelectorAll("#newbie .item").forEach(i=>{
   const type = i.querySelector(".t").value;      // 新增 / 更新
