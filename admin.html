@@ -123,7 +123,7 @@ function add6TPeace(){
   <div class="item">
     <label>姓名</label><input class="n">    
     <label>斗別</label>
-    <select class="t" onchange="peaceWarn(this)">      
+    <select class="t" onchange="6TpeaceWarn(this)">      
       <option value="其他神明">其他神明（請回宮擲筊）</option>
       <option value="福德正神">福德正神 (請於送出後與本宮聯繫)</option>
     </select>
@@ -132,7 +132,7 @@ function add6TPeace(){
   </div>`);
 }
 
-function peaceWarn(sel){
+function 6TpeaceWarn(sel){
   const warn = sel.parentElement.querySelector('.warn');
   warn.style.display = sel.value === "其他神明" ? "block" : "none";
 }
