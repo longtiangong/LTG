@@ -348,10 +348,110 @@ function sendLine(){
     }
   });
 
-  m += `────────────\n`;
+m += `────────────\n`;
   m += `合計金額：${grandTotal} 元`;
-//合計
-  window.open("https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m));
+
+  const lineUrl = "https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m);
+  window.open(lineUrl, '_blank');
+
+  alert("已開啟 LINE 確認訊息，請確認後傳送！\n同時資料正在背景存檔...");
+
+  // 背景送資料到 Sheet
+  let formData = new URLSearchParams();
+  formData.append('contactName', document.getElementById('contactName').value);
+  formData.append('phone', document.getElementById('phone').value);
+  formData.append('total', grandTotal);
+
+  let lightItems = '';
+  document.querySelectorAll("#light .item").forEach((item, idx) => {
+    const name = item.querySelector(".n")?.value?.trim();
+    const year = item.querySelector(".y")?.value?.trim();
+    const type = item.querySelector(".c")?.value?.trim() || item.querySelector(".t")?.value || '';
+    if (name && year) {
+      lightItems += `${idx+1}. ${name} 民國${year} ${gz(year)}【${type}】   `;
+    }
+  });
+  formData.append('lightItems', lightItems);
+
+  let taisuiItems = '';
+  document.querySelectorAll("#taisui .item").forEach((item, idx) => {
+    const name = item.querySelector(".n")?.value?.trim();
+    const year = item.querySelector(".y")?.value?.trim();
+    if (name && year) {
+      taisuiItems += `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
+    }
+  });
+  formData.append('taisuiItems', taisuiItems);
+  
+  let jigaiItems = '';
+  document.querySelectorAll("#jigai .item").forEach((item, idx) => {
+    const name = item.querySelector(".n")?.value?.trim();
+    const year = item.querySelector(".y")?.value?.trim();
+    if (name && year) {
+      jigaiItems += `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
+    }
+  });
+  formData.append('jigaiItems', jigaiItems);
+
+  let peace5MItems = '';
+  document.querySelectorAll("#peace5M .item").forEach((item, idx) => {
+    const name = item.querySelector(".n")?.value?.trim();
+    const type = item.querySelector(".t")?.value || '';
+    if (name) {
+      peace5MItems += `${idx+1}. ${name}【${type}】   `;
+    }
+  });
+  formData.append('peace5MItems', peace5MItems);
+
+  let peaceItems = '';
+  const peaceCategories = [
+    { id: "peace6T", name: "平安年斗6000元" },
+    { id: "peace5T", name: "平安年斗5000元" },
+    { id: "peace3T", name: "平安年斗3000元" },
+    { id: "peace1T", name: "平安年斗1000元" }
+  ];
+
+  peaceCategories.forEach(cat => {
+    document.querySelectorAll(`#${cat.id} .item`).forEach((item, idx) => {
+      const name = item.querySelector(".n")?.value?.trim();
+      const year = item.querySelector(".y")?.value?.trim();
+      const type = item.querySelector(".t")?.value || '';
+      if (name) {
+        peaceItems += `${cat.name} - ${idx+1}. ${name} 民國${year || '無'}【${type}】   `;
+      }
+    });
+  });
+  formData.append('peaceItems', peaceItems);
+
+  let newbieItems = '';
+  document.querySelectorAll("#newbie .item").forEach((item, idx) => {
+    const type = item.querySelector(".t")?.value || '';
+    const name = item.querySelector(".n")?.value?.trim();
+    const address = item.querySelector(".Ad")?.value?.trim();
+    const lunar = item.querySelector(".l")?.value?.trim();
+    const time = item.querySelector(".time")?.value?.trim();
+    const items = item.querySelector(".items")?.value?.trim();
+    if (name && lunar) {
+      newbieItems += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}   `;
+    }
+  });
+  formData.append('newbieItems', newbieItems);
+
+  fetch('https://script.google.com/macros/s/AKfycbzz7IzK36S7u_Re9mF8UdKm8AV1H7jk1tWGR9ODfU-lpq6_yctrhzdmyBwetRNoOyQdgg/exec', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.text())
+  .then(result => {
+    if (result.trim() === "success") {
+      console.log("資料已存檔");
+    } else {
+      console.error("存檔失敗");
+    }
+  })
+  .catch(error => {
+    console.error("網路錯誤", error);
+  });
 }
 </script>
 
