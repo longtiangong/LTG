@@ -170,7 +170,7 @@ function sendLine(){
       if (!name || !year) return;
 
       let type = custom || (typeElem ? typeElem.value : "");
-      let line = `${index}. ${cat.name} ${name} 民國${year} ${gz(year)}【${type}】\n`;
+      let line = `${index}. ${cat.name} ${name} 民國${year} ${gz(year)}\n`;
       
 
       if (cat.id === "peace5M") {
