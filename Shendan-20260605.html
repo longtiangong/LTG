@@ -135,116 +135,191 @@ function calc(){
 document.body.addEventListener("input", calc);
 
 function sendLine(){
-  if(!document.getElementById('contactName').value || !document.getElementById('phone').value){
-    alert("請填聯絡資料");
-    return;
-  }
 
-  let m = `【龍天宮 ${YEAR} 年度 六月聖誕補運補財庫祈福報名表-01】\n`;
-  m += `聯絡人：${document.getElementById('contactName').value}\n`;
-  m += `電話：${document.getElementById('phone').value}\n`;
-  m += `────────────\n`;
+if(!document.getElementById('contactName').value || !document.getElementById('phone').value){
+alert("請填聯絡資料");
+return;
+}
 
-  let grandTotal = 0;  
- 
-  const categories = [
-    { id: "Buyun",   name: "補運",   price: PRICE.Buyun   },
-    { id: "Buchaiku",  name: "補財庫",     price: PRICE.Buchaiku  },
-
-  ];
-
-  categories.forEach(cat => {
-    const items = document.querySelectorAll(`#${cat.id} .item`);
-    if (items.length === 0) return;  
-
-    let categoryTotal = 0;
-    let index = 1;
-
-    items.forEach(item => {
-      const name = item.querySelector(".n")?.value?.trim();
-      const year = item.querySelector(".y")?.value?.trim();
-      const typeElem = item.querySelector(".t");
-      const custom = item.querySelector(".c")?.value?.trim();
-
-
-      if (!name || !year) return;
-
-      let type = custom || (typeElem ? typeElem.value : "");
-      let line = `${index}. ${cat.name} ${name} 民國${year} ${gz(year)}\n`;
-      
-
-      if (cat.id === "peace5M") {
-        line = `${index}. 五大主斗 ${name}【${type}】\n`;
-      }
-
-      m += line;
-      categoryTotal += cat.price;
-      index++;
-    });
-
-    if (categoryTotal > 0) {
-      m += `小計：${categoryTotal} 元\n`;
-      m += `=============\n`;
-      grandTotal += categoryTotal;
-    }
-  });
-
-
-  m += `新增或更新資料：\n`;
-  document.querySelectorAll("#newbie .item").forEach((item, idx) => {
-    const type = item.querySelector(".t")?.value;
-    const name = item.querySelector(".n")?.value?.trim();
-    const address = item.querySelector(".Ad")?.value?.trim();
-    const lunar = item.querySelector(".l")?.value?.trim();
-    const time = item.querySelector(".time")?.value?.trim();
-    const items = item.querySelector(".items")?.value?.trim();
-
-    if (name && lunar) {
-      m += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}\n`;
-    }
-  });
-
+let m = `【龍天宮 ${YEAR} 年度 六月聖誕補運補財庫祈福報名表】\n`;
+m += `聯絡人：${document.getElementById('contactName').value}\n`;
+m += `電話：${document.getElementById('phone').value}\n`;
 m += `────────────\n`;
-  m += `合計金額：${grandTotal} 元`;
 
-  const lineUrl = "https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m);
-  console.log("開始fetch");
-  fetch('https://script.google.com/macros/s/AKfycbz5wQKOqoV_trD1Rwh1iIfNhQ_aA1MoP_xtC5eEOHhMmZMq1BXtkQGT11qZ3VUJIMUHlg/exec', {
-method: 'POST',
-body: formData,
-mode: 'no-cors'
-})
-.then(() => {
+let grandTotal = 0;
 
-console.log("已送出 Google Sheet");
+const categories = [
+{ id: "Buyun", name: "補運", price: PRICE.Buyun },
+{ id: "Buchaiku", name: "補財庫", price: PRICE.Buchaiku }
+];
 
-alert("資料已成功送出");
+categories.forEach(cat => {
 
-})
-.catch(error => {
+```
+const items = document.querySelectorAll(`#${cat.id} .item`);
 
-console.error(error);
+let categoryTotal = 0;
+let index = 1;
 
-alert("資料送出失敗");
+items.forEach(item => {
+
+  const name = item.querySelector(".n")?.value?.trim();
+  const year = item.querySelector(".y")?.value?.trim();
+
+  if (!name || !year) return;
+
+  m += `${index}. ${cat.name} ${name} 民國${year} ${gz(year)}\n`;
+
+  categoryTotal += cat.price;
+
+  index++;
 
 });
 
-mode: 'no-cors'
-})
+if(categoryTotal > 0){
+
+  m += `小計：${categoryTotal} 元\n`;
+  m += `=============\n`;
+
+  grandTotal += categoryTotal;
+
+}
+```
+
+});
+
+m += `新增或更新資料：\n`;
+
+document.querySelectorAll("#newbie .item").forEach((item, idx) => {
+
+```
+const type = item.querySelector(".t")?.value;
+const name = item.querySelector(".n")?.value?.trim();
+const address = item.querySelector(".Ad")?.value?.trim();
+const lunar = item.querySelector(".l")?.value?.trim();
+const time = item.querySelector(".time")?.value?.trim();
+const items = item.querySelector(".items")?.value?.trim();
+
+if(name && lunar){
+
+  m += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}\n`;
+
+}
+```
+
+});
+
+m += `────────────\n`;
+m += `合計金額：${grandTotal} 元`;
+
+const lineUrl =
+"https://line.me/R/oaMessage/@813bpsag/?"
++ encodeURIComponent(m);
+
+// ===== Google Sheet =====
+
+let formData = new URLSearchParams();
+
+formData.append('contactName',
+document.getElementById('contactName').value);
+
+formData.append('phone',
+document.getElementById('phone').value);
+
+formData.append('total', grandTotal);
+
+let BuyunItems = '';
+
+document.querySelectorAll("#Buyun .item").forEach((item, idx) => {
+
+```
+const name = item.querySelector(".n")?.value?.trim();
+const year = item.querySelector(".y")?.value?.trim();
+
+if(name && year){
+
+  BuyunItems +=
+  `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
+
+}
+```
+
+});
+
+formData.append('BuyunItems', BuyunItems);
+
+let BuchaikuItems = '';
+
+document.querySelectorAll("#Buchaiku .item").forEach((item, idx) => {
+
+```
+const name = item.querySelector(".n")?.value?.trim();
+const year = item.querySelector(".y")?.value?.trim();
+
+if(name && year){
+
+  BuchaikuItems +=
+  `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
+
+}
+```
+
+});
+
+formData.append('BuchaikuItems', BuchaikuItems);
+
+let newbieItems = '';
+
+document.querySelectorAll("#newbie .item").forEach((item, idx) => {
+
+```
+const type = item.querySelector(".t")?.value || '';
+const name = item.querySelector(".n")?.value?.trim();
+const address = item.querySelector(".Ad")?.value?.trim();
+const lunar = item.querySelector(".l")?.value?.trim();
+const time = item.querySelector(".time")?.value?.trim();
+const items = item.querySelector(".items")?.value?.trim();
+
+if(name && lunar){
+
+  newbieItems +=
+  `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}   `;
+
+}
+```
+
+});
+
+formData.append('newbieItems', newbieItems);
+
+fetch(
+'https://script.google.com/macros/s/AKfycbz5wQKOqoV_trD1Rwh1iIfNhQ_aA1MoP_xtC5eEOHhMmZMq1BXtkQGT11qZ3VUJIMUHlg/exec',
+{
+method:'POST',
+body:formData,
+mode:'no-cors'
+}
+)
 .then(() => {
 
+```
 alert("資料已存檔");
 
 window.open(lineUrl, '_blank');
+```
 
 })
 .catch(error => {
 
+```
 console.error(error);
 
 alert("存檔失敗");
+```
 
 });
+
+}
 
 
   // 背景送資料到 Sheet
