@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度<br>
+<h1>龍天宮 2026 年度-v1<br>
   六月聖誕補運補財庫祈福報名<br>
   補運日期：民國115年國曆八月二日(農曆六月二十日)星期日<br>
 </h1>
@@ -385,18 +385,21 @@ fetch(
   'https://script.google.com/macros/s/AKfycbzECX5P4m7aonZbMfevkqsoOXldsUmJ8V-3qxiOOnTlwmCuZY7ZE1Hrr0AvEyb6xtJ5/exec',
   {
     method:'POST',
-    body:formData,
-    mode:'no-cors'
+    body:formData
   }
-);
+)
+.then(r=>r.text())
+.then(res=>{
+  console.log(res);
 
-// ===== 完成 =====
+  alert("資料已送出");
 
-alert("資料已送出");
-
-window.open(lineUrl,'_blank');
-
-}
+  window.open(lineUrl,'_blank');
+})
+.catch(err=>{
+  console.error(err);
+  alert("送出失敗");
+});
 </script>
 
 
