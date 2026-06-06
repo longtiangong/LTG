@@ -216,6 +216,25 @@ mode: 'no-cors'
 })
 .then(() => {
 
+console.log("已送出 Google Sheet");
+
+alert("資料已成功送出");
+
+window.open(lineUrl, '_blank');
+
+})
+.catch(error => {
+
+console.error(error);
+
+alert("資料送出失敗");
+
+});
+
+mode: 'no-cors'
+})
+.then(() => {
+
 alert("資料已存檔");
 
 window.open(lineUrl, '_blank');
