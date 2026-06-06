@@ -69,318 +69,344 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
   
 補財庫：祈求「開財路、補財庫、守財庫」。財運穩定、正財增加、漏財減少、生意興旺
 </div>
+```html
 <script>
 const YEAR=2026;
 const PRICE={Buyun:300,Buchaiku:300};
+
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
-function gz(y){y=+y+1911;return stems[(y-4)%10]+branches[(y-4)%12]+"年"}
+function gz(y){
+  y=+y+1911;
+  return stems[(y-4)%10]+branches[(y-4)%12]+"年";
+}
 
-// 使用 insertAdjacentHTML 確保不重刷內容
+// ===== 補運 =====
 function addBuyun(){
-  const html = `
+
+  const html=`
   <div class="item">
-    <label>姓名</label><input class="n">
-    <label>民國出生年</label><input class="y" type="number">
-    
-  </div>`;
-  document.getElementById('Buyun').insertAdjacentHTML('beforeend', html);
+    <label>姓名</label>
+    <input class="n">
+
+    <label>民國出生年</label>
+    <input class="y" type="number">
+  </div>
+  `;
+
+  document.getElementById('Buyun')
+  .insertAdjacentHTML('beforeend',html);
+
 }
+
+// ===== 補財庫 =====
 function addBuchaiku(){
-  const html = `
+
+  const html=`
   <div class="item">
-    <label>姓名</label><input class="n">
-    <label>民國出生年</label><input class="y" type="number">
-    
-  </div>`;
-  document.getElementById('Buchaiku').insertAdjacentHTML('beforeend', html);
+    <label>姓名</label>
+    <input class="n">
+
+    <label>民國出生年</label>
+    <input class="y" type="number">
+  </div>
+  `;
+
+  document.getElementById('Buchaiku')
+  .insertAdjacentHTML('beforeend',html);
+
 }
 
-
-
+// ===== 新增資料 =====
 function addNewbie(){
-  const html = `
+
+  const html=`
   <div class="item">
+
     <label>類型</label>
     <select class="t">
       <option value="新增">新增</option>
       <option value="更新">更新</option>
     </select>
-    <label>姓名</label><input class="n">
-    <label>地址</label><input class="Ad">
-    <label>農曆出生年月日</label><input class="l" placeholder="例：70/06/24">
-    <label>時辰(不清楚寫吉時)</label><input class="time" placeholder="例：吉時">
-    <label>預約項目</label><input class="items" placeholder="例：補運、補財庫">
-  </div>`;
-  document.getElementById('newbie').insertAdjacentHTML('beforeend', html);
+
+    <label>姓名</label>
+    <input class="n">
+
+    <label>地址</label>
+    <input class="Ad">
+
+    <label>農曆出生年月日</label>
+    <input class="l" placeholder="例：70/06/24">
+
+    <label>時辰(不清楚寫吉時)</label>
+    <input class="time" placeholder="例：吉時">
+
+    <label>預約項目</label>
+    <input class="items" placeholder="例：補運、補財庫">
+
+  </div>
+  `;
+
+  document.getElementById('newbie')
+  .insertAdjacentHTML('beforeend',html);
+
 }
 
+// ===== 計算金額 =====
 function calc(){
-  let t=0;
-  // 僅計算 Buyun, Buchaiku兩個區塊
-  ["Buyun", "Buchaiku"].forEach(id=>{
-    document.querySelectorAll(`#${id} .item`).forEach(i=>{
-      // 只要姓名與年份有填，就計費
-      if(i.querySelector(".n")?.value.trim() && i.querySelector(".y")?.value.trim()) {
-        t += PRICE[id];
+
+  let total=0;
+
+  ["Buyun","Buchaiku"].forEach(id=>{
+
+    document.querySelectorAll(`#${id} .item`)
+    .forEach(item=>{
+
+      const name=item.querySelector(".n")?.value.trim();
+      const year=item.querySelector(".y")?.value.trim();
+
+      if(name && year){
+
+        total += PRICE[id];
+
       }
+
     });
+
   });
-  // newbie 區塊不再加入 t 的計算
-  document.getElementById('grand').innerText = t;
+
+  document.getElementById('grand').innerText=total;
+
 }
 
-// 監聽輸入即時更新金額
-document.body.addEventListener("input", calc);
+// ===== 即時更新 =====
+document.body.addEventListener("input",calc);
 
+// ===== LINE送出 =====
 function sendLine(){
 
-if(!document.getElementById('contactName').value || !document.getElementById('phone').value){
-alert("請填聯絡資料");
-return;
-}
-
-let m = `【龍天宮 ${YEAR} 年度 六月聖誕補運補財庫祈福報名表】\n`;
-m += `聯絡人：${document.getElementById('contactName').value}\n`;
-m += `電話：${document.getElementById('phone').value}\n`;
-m += `────────────\n`;
-
-let grandTotal = 0;
-
-const categories = [
-{ id: "Buyun", name: "補運", price: PRICE.Buyun },
-{ id: "Buchaiku", name: "補財庫", price: PRICE.Buchaiku }
-];
-
-categories.forEach(cat => {
-
-```
-const items = document.querySelectorAll(`#${cat.id} .item`);
-
-let categoryTotal = 0;
-let index = 1;
-
-items.forEach(item => {
-
-  const name = item.querySelector(".n")?.value?.trim();
-  const year = item.querySelector(".y")?.value?.trim();
-
-  if (!name || !year) return;
-
-  m += `${index}. ${cat.name} ${name} 民國${year} ${gz(year)}\n`;
-
-  categoryTotal += cat.price;
-
-  index++;
-
-});
-
-if(categoryTotal > 0){
-
-  m += `小計：${categoryTotal} 元\n`;
-  m += `=============\n`;
-
-  grandTotal += categoryTotal;
-
-}
-```
-
-});
-
-m += `新增或更新資料：\n`;
-
-document.querySelectorAll("#newbie .item").forEach((item, idx) => {
-
-```
-const type = item.querySelector(".t")?.value;
-const name = item.querySelector(".n")?.value?.trim();
-const address = item.querySelector(".Ad")?.value?.trim();
-const lunar = item.querySelector(".l")?.value?.trim();
-const time = item.querySelector(".time")?.value?.trim();
-const items = item.querySelector(".items")?.value?.trim();
-
-if(name && lunar){
-
-  m += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}\n`;
-
-}
-```
-
-});
-
-m += `────────────\n`;
-m += `合計金額：${grandTotal} 元`;
-
-const lineUrl =
-"https://line.me/R/oaMessage/@813bpsag/?"
-+ encodeURIComponent(m);
-
-// ===== Google Sheet =====
-
-let formData = new URLSearchParams();
-
-formData.append('contactName',
-document.getElementById('contactName').value);
-
-formData.append('phone',
-document.getElementById('phone').value);
-
-formData.append('total', grandTotal);
-
-let BuyunItems = '';
-
-document.querySelectorAll("#Buyun .item").forEach((item, idx) => {
-
-```
-const name = item.querySelector(".n")?.value?.trim();
-const year = item.querySelector(".y")?.value?.trim();
-
-if(name && year){
-
-  BuyunItems +=
-  `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
-
-}
-```
-
-});
-
-formData.append('BuyunItems', BuyunItems);
-
-let BuchaikuItems = '';
-
-document.querySelectorAll("#Buchaiku .item").forEach((item, idx) => {
-
-```
-const name = item.querySelector(".n")?.value?.trim();
-const year = item.querySelector(".y")?.value?.trim();
-
-if(name && year){
-
-  BuchaikuItems +=
-  `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
-
-}
-```
-
-});
-
-formData.append('BuchaikuItems', BuchaikuItems);
-
-let newbieItems = '';
-
-document.querySelectorAll("#newbie .item").forEach((item, idx) => {
-
-```
-const type = item.querySelector(".t")?.value || '';
-const name = item.querySelector(".n")?.value?.trim();
-const address = item.querySelector(".Ad")?.value?.trim();
-const lunar = item.querySelector(".l")?.value?.trim();
-const time = item.querySelector(".time")?.value?.trim();
-const items = item.querySelector(".items")?.value?.trim();
-
-if(name && lunar){
-
-  newbieItems +=
-  `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}   `;
-
-}
-```
-
-});
-
-formData.append('newbieItems', newbieItems);
-
-fetch(
-'https://script.google.com/macros/s/AKfycbz5wQKOqoV_trD1Rwh1iIfNhQ_aA1MoP_xtC5eEOHhMmZMq1BXtkQGT11qZ3VUJIMUHlg/exec',
-{
-method:'POST',
-body:formData,
-mode:'no-cors'
-}
-)
-.then(() => {
-
-```
-alert("資料已存檔");
-
-window.open(lineUrl, '_blank');
-```
-
-})
-.catch(error => {
-
-```
-console.error(error);
-
-alert("存檔失敗");
-```
-
-});
-
-}
-
-
-  // 背景送資料到 Sheet
-  let formData = new URLSearchParams();
-  formData.append('contactName', document.getElementById('contactName').value);
-  formData.append('phone', document.getElementById('phone').value);
-  formData.append('total', grandTotal);
-
-  let BuyunItems = '';
-  document.querySelectorAll("#Buyun .item").forEach((item, idx) => {
-    const name = item.querySelector(".n")?.value?.trim();
-    const year = item.querySelector(".y")?.value?.trim();
-    const type = item.querySelector(".c")?.value?.trim() || item.querySelector(".t")?.value || '';
-    if (name && year) {
-      BuyunItems += `${idx+1}. ${name} 民國${year} ${gz(year)}【${type}】   `;
+  // 聯絡資料檢查
+  if(
+    !document.getElementById('contactName').value ||
+    !document.getElementById('phone').value
+  ){
+    alert("請填聯絡資料");
+    return;
+  }
+
+  let m=`【龍天宮 ${YEAR} 年度 六月聖誕補運補財庫祈福報名表】\n`;
+
+  m += `聯絡人：${document.getElementById('contactName').value}\n`;
+
+  m += `電話：${document.getElementById('phone').value}\n`;
+
+  m += `────────────\n`;
+
+  let grandTotal=0;
+
+  const categories=[
+    {
+      id:"Buyun",
+      name:"補運",
+      price:PRICE.Buyun
+    },
+    {
+      id:"Buchaiku",
+      name:"補財庫",
+      price:PRICE.Buchaiku
     }
-  });
-  formData.append('BuyunItems', BuyunItems);
+  ];
 
-  let BuchaikuItems = '';
-  document.querySelectorAll("#Buchaiku .item").forEach((item, idx) => {
-    const name = item.querySelector(".n")?.value?.trim();
-    const year = item.querySelector(".y")?.value?.trim();
-    if (name && year) {
-      BuchaikuItems += `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
-    }
-  });
-  formData.append('BuchaikuItems', BuchaikuItems);
-  
-  
-  let newbieItems = '';
-  document.querySelectorAll("#newbie .item").forEach((item, idx) => {
-    const type = item.querySelector(".t")?.value || '';
-    const name = item.querySelector(".n")?.value?.trim();
-    const address = item.querySelector(".Ad")?.value?.trim();
-    const lunar = item.querySelector(".l")?.value?.trim();
-    const time = item.querySelector(".time")?.value?.trim();
-    const items = item.querySelector(".items")?.value?.trim();
-    if (name && lunar) {
-      newbieItems += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}   `;
-    }
-  });
-  formData.append('newbieItems', newbieItems);
+  // ===== 補運、補財庫 =====
+  categories.forEach(cat=>{
 
-  fetch('https://script.google.com/macros/s/AKfycbz5wQKOqoV_trD1Rwh1iIfNhQ_aA1MoP_xtC5eEOHhMmZMq1BXtkQGT11qZ3VUJIMUHlg/exec', {
-    method: 'POST',
-    body: formData
+    const items=document.querySelectorAll(`#${cat.id} .item`);
+
+    let categoryTotal=0;
+
+    let index=1;
+
+    items.forEach(item=>{
+
+      const name=item.querySelector(".n")?.value?.trim();
+
+      const year=item.querySelector(".y")?.value?.trim();
+
+      if(!name || !year) return;
+
+      m += `${index}. ${cat.name} ${name} 民國${year} ${gz(year)}\n`;
+
+      categoryTotal += cat.price;
+
+      index++;
+
+    });
+
+    if(categoryTotal>0){
+
+      m += `小計：${categoryTotal} 元\n`;
+
+      m += `=============\n`;
+
+      grandTotal += categoryTotal;
+
+    }
+
+  });
+
+  // ===== 新增資料 =====
+  m += `新增或更新資料：\n`;
+
+  document.querySelectorAll("#newbie .item")
+  .forEach((item,idx)=>{
+
+    const type=item.querySelector(".t")?.value;
+
+    const name=item.querySelector(".n")?.value?.trim();
+
+    const address=item.querySelector(".Ad")?.value?.trim();
+
+    const lunar=item.querySelector(".l")?.value?.trim();
+
+    const time=item.querySelector(".time")?.value?.trim();
+
+    const items=item.querySelector(".items")?.value?.trim();
+
+    if(name && lunar){
+
+      m += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}\n`;
+
+    }
+
+  });
+
+  m += `────────────\n`;
+
+  m += `合計金額：${grandTotal} 元`;
+
+  // ===== LINE URL =====
+  const lineUrl=
+  "https://line.me/R/oaMessage/@813bpsag/?"
+  + encodeURIComponent(m);
+
+  // ===== Google Sheet =====
+  let formData=new URLSearchParams();
+
+  formData.append(
+    'contactName',
+    document.getElementById('contactName').value
+  );
+
+  formData.append(
+    'phone',
+    document.getElementById('phone').value
+  );
+
+  formData.append(
+    'total',
+    grandTotal
+  );
+
+  // ===== 補運 =====
+  let BuyunItems='';
+
+  document.querySelectorAll("#Buyun .item")
+  .forEach((item,idx)=>{
+
+    const name=item.querySelector(".n")?.value?.trim();
+
+    const year=item.querySelector(".y")?.value?.trim();
+
+    if(name && year){
+
+      BuyunItems +=
+      `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
+
+    }
+
+  });
+
+  formData.append('BuyunItems',BuyunItems);
+
+  // ===== 補財庫 =====
+  let BuchaikuItems='';
+
+  document.querySelectorAll("#Buchaiku .item")
+  .forEach((item,idx)=>{
+
+    const name=item.querySelector(".n")?.value?.trim();
+
+    const year=item.querySelector(".y")?.value?.trim();
+
+    if(name && year){
+
+      BuchaikuItems +=
+      `${idx+1}. ${name} 民國${year} ${gz(year)}   `;
+
+    }
+
+  });
+
+  formData.append('BuchaikuItems',BuchaikuItems);
+
+  // ===== 新增資料 =====
+  let newbieItems='';
+
+  document.querySelectorAll("#newbie .item")
+  .forEach((item,idx)=>{
+
+    const type=item.querySelector(".t")?.value || '';
+
+    const name=item.querySelector(".n")?.value?.trim();
+
+    const address=item.querySelector(".Ad")?.value?.trim();
+
+    const lunar=item.querySelector(".l")?.value?.trim();
+
+    const time=item.querySelector(".time")?.value?.trim();
+
+    const items=item.querySelector(".items")?.value?.trim();
+
+    if(name && lunar){
+
+      newbieItems +=
+      `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}   `;
+
+    }
+
+  });
+
+  formData.append('newbieItems',newbieItems);
+
+  // ===== 傳送到 Google Sheet =====
+  fetch(
+    'https://script.google.com/macros/s/AKfycbz5wQKOqoV_trD1Rwh1iIfNhQ_aA1MoP_xtC5eEOHhMmZMq1BXtkQGT11qZ3VUJIMUHlg/exec',
+    {
+      method:'POST',
+      body:formData,
+      mode:'no-cors'
+    }
+  )
+  .then(()=>{
+
+    alert("資料已存檔");
+
+    window.open(lineUrl,'_blank');
+
   })
-  .then(response => response.text())
-  .then(result => {
-    if (result.trim() === "success") {
-      console.log("資料已存檔");
-    } else {
-      console.error("存檔失敗");
-    }
-  })
-  .catch(error => {
-    console.error("網路錯誤", error);
+  .catch(error=>{
+
+    console.error(error);
+
+    alert("存檔失敗");
+
   });
+
 }
 </script>
+```
+
 
 </body>
 
