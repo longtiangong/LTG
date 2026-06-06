@@ -208,9 +208,27 @@ m += `────────────\n`;
   m += `合計金額：${grandTotal} 元`;
 
   const lineUrl = "https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m);
-  window.open(lineUrl, '_blank');
+  console.log("開始fetch");
+  fetch('https://script.google.com/macros/s/AKfycbzevA7JlCeJJjhdXzp-S1dAL4_fC8mjc-lKW7ljf9yZsaE3naqVtv4mwqc0qJiAlrFhkw/exec', {
+method: 'POST',
+body: formData,
+mode: 'no-cors'
+})
+.then(() => {
 
-  alert("已開啟 LINE 確認訊息，請確認後傳送！\n同時資料正在背景存檔...");
+alert("資料已存檔");
+
+window.open(lineUrl, '_blank');
+
+})
+.catch(error => {
+
+console.error(error);
+
+alert("存檔失敗");
+
+});
+
 
   // 背景送資料到 Sheet
   let formData = new URLSearchParams();
