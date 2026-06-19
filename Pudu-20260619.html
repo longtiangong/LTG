@@ -22,7 +22,7 @@ input,select{width:100%;font-size:16px;padding:8px;box-sizing:border-box;margin-
 
 <body>
 
-<h1>龍天宮 2026 年度-V4<br>
+<h1>龍天宮 2026 年度-V1<br>
   七月普度報名<br>
   補運日期：民國115年國曆八月三十日(農曆七月十八日)星期日<br>
 </h1>
@@ -175,9 +175,8 @@ document.body.addEventListener("input",calc);
 // ===== LINE送出 =====
 function sendLine(){
 
-// 先重新計算
-calc();
-
+  // 先重新計算
+  calc();
 
   // 聯絡資料檢查
   if(
@@ -191,65 +190,40 @@ calc();
   let m=`【龍天宮 ${YEAR} 年度 七月普度祈福報名表】\n`;
 
   m += `聯絡人：${document.getElementById('contactName').value}\n`;
-
   m += `電話：${document.getElementById('phone').value}\n`;
-
   m += `────────────\n`;
 
   let grandTotal =
   Number(document.getElementById('grand').innerText);
 
-
-  const categories=[
-    {
-      id:"Pudu",
-      name:"普度",
-      price:PRICE.Pudu
-    },
-    
-  ];
-
   // ===== 普度 =====
-  categories.forEach(cat=>{
+  let categoryTotal = 0;
+  let index = 1;
 
-    const items=document.querySelectorAll(`#${cat.id} .item`);
+  document.querySelectorAll("#Pudu .item")
+  .forEach(item=>{
 
-    let categoryTotal=0;
+    const name=item.querySelector(".n")?.value?.trim();
+    const year=item.querySelector(".y")?.value?.trim();
+    const ding=item.querySelector(".T")?.value?.trim() || '0';
+    const kou=item.querySelector(".K")?.value?.trim() || '0';
 
-    let index=1;
+    if(!name || !year) return;
 
-    items.forEach(item=>{
+    m += `${index}. 普度 ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou}\n`;
 
-      const name=item.querySelector(".n")?.value?.trim();
+    categoryTotal += PRICE.Pudu;
 
-      const year=item.querySelector(".y")?.value?.trim();
-
-      const ding=item.querySelector(".T")?.value?.trim() || '0';
-
-      const kou=item.querySelector(".K")?.value?.trim() || '0';
-
-      if(!name || !year) return;
-
-      m += `${index}. ${cat.name} ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou}\n`;
-
-      categoryTotal += cat.price;
-
-      index++;
-
-    });
-
-    if(categoryTotal>0){
-
-      m += `小計：${categoryTotal} 元\n`;
-
-      m += `=============\n`;
-
-     }
-
-
-    }
+    index++;
 
   });
+
+  if(categoryTotal>0){
+
+    m += `小計：${categoryTotal} 元\n`;
+    m += `=============\n`;
+
+  }
 
   // ===== 新增資料 =====
   m += `新增或更新資料：\n`;
@@ -258,27 +232,21 @@ calc();
   .forEach((item,idx)=>{
 
     const type=item.querySelector(".t")?.value;
-
     const name=item.querySelector(".n")?.value?.trim();
-
     const address=item.querySelector(".Ad")?.value?.trim();
-
     const lunar=item.querySelector(".l")?.value?.trim();
-
     const time=item.querySelector(".time")?.value?.trim();
-
     const items=item.querySelector(".items")?.value?.trim();
 
-    if(name && lunar){
+    if(name){
 
-      m += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}\n`;
+      m += `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 丁口：${items}\n`;
 
     }
 
   });
 
   m += `────────────\n`;
-
   m += `合計金額：${grandTotal} 元`;
 
   // ===== LINE URL =====
@@ -311,25 +279,21 @@ calc();
   .forEach((item,idx)=>{
 
     const name=item.querySelector(".n")?.value?.trim();
-
     const year=item.querySelector(".y")?.value?.trim();
-
     const ding=item.querySelector(".T")?.value?.trim() || '0';
-
     const kou=item.querySelector(".K")?.value?.trim() || '0';
 
     if(name && year){
 
-     PuduItems +=
-     `${idx+1}. ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou}   `;
-  }
+      PuduItems +=
+      `${idx+1}. ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou}\n`;
 
+    }
 
   });
 
   formData.append('PuduItems',PuduItems);
 
- 
   // ===== 新增資料 =====
   let newbieItems='';
 
@@ -337,21 +301,16 @@ calc();
   .forEach((item,idx)=>{
 
     const type=item.querySelector(".t")?.value || '';
-
     const name=item.querySelector(".n")?.value?.trim();
-
     const address=item.querySelector(".Ad")?.value?.trim();
-
     const lunar=item.querySelector(".l")?.value?.trim();
-
     const time=item.querySelector(".time")?.value?.trim();
-
     const items=item.querySelector(".items")?.value?.trim();
 
-    if(name && lunar){
+    if(name){
 
       newbieItems +=
-      `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 項目：${items}   `;
+      `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 丁口：${items}\n`;
 
     }
 
@@ -360,26 +319,31 @@ calc();
   formData.append('newbieItems',newbieItems);
 
   // ===== 傳送到 Google Sheet =====
+  fetch(
+    'https://script.google.com/macros/s/AKfycby5Xfkt4dtjTD6P2Ca8sWYnlkJuU6sgeewo9OaYj380SFXosoSzsmzaWaxkgKFAHAeK/exec',
+    {
+      method:'POST',
+      body:formData
+    }
+  )
+  .then(r=>r.text())
+  .then(res=>{
 
-fetch(
-  'https://script.google.com/macros/s/AKfycby5Xfkt4dtjTD6P2Ca8sWYnlkJuU6sgeewo9OaYj380SFXosoSzsmzaWaxkgKFAHAeK/exec',
-  {
-    method:'POST',
-    body:formData
-  }
-)
-.then(r=>r.text())
-.then(res=>{
-  console.log(res);
+    console.log(res);
 
-  alert("資料已送出");
+    alert("資料已送出");
 
-  window.open(lineUrl,'_blank');
-})
-.catch(err=>{
-  console.error(err);
-  alert("送出失敗");
-});
+    window.open(lineUrl,'_blank');
+
+  })
+  .catch(err=>{
+
+    console.error(err);
+
+    alert("送出失敗");
+
+  });
+
 }
 // 預設先新增一筆
 addPudu();
