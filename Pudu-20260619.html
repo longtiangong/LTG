@@ -132,7 +132,7 @@ function addNewbie(){
     <input class="time" placeholder="例：吉時">
 
     <label>丁口</label>
-    <input class="items" placeholder="例：2丁、2口">
+    <input class="items" placeholder="例：2丁2口">
 
   </div>
   `;
@@ -286,7 +286,7 @@ function sendLine(){
     if(name && year){
 
       PuduItems +=
-      `${idx+1}. ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou} ｜ `;
+      `${idx+1}. ${name} 民國${year} ${gz(year)} ${ding}丁 ${kou}口 ｜ `;
 
     }
 
