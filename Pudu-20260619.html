@@ -286,7 +286,7 @@ function sendLine(){
     if(name && year){
 
       PuduItems +=
-      `${idx+1}. ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou}\n`;
+      `${idx+1}. ${name} 民國${year} ${gz(year)} 丁${ding} 口${kou} ｜ `;
 
     }
 
@@ -310,7 +310,7 @@ function sendLine(){
     if(name){
 
       newbieItems +=
-      `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 丁口：${items}\n`;
+      `${idx+1}. [${type}] 姓名：${name} 地址：${address} 農曆：${lunar} 時辰：${time} 丁口：${items} ｜ `;
 
     }
 
