@@ -175,6 +175,10 @@ document.body.addEventListener("input",calc);
 // ===== LINE送出 =====
 function sendLine(){
 
+// 先重新計算
+calc();
+
+
   // 聯絡資料檢查
   if(
     !document.getElementById('contactName').value ||
@@ -192,7 +196,9 @@ function sendLine(){
 
   m += `────────────\n`;
 
-  let grandTotal=0;
+  let grandTotal =
+  Number(document.getElementById('grand').innerText);
+
 
   const categories=[
     {
