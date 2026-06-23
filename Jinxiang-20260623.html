@@ -120,7 +120,13 @@ function addNewbie(){
     <input class="NBD" placeholder="例：070/06/24">
 
     <label>身份證號碼</label>
-    <input class="NID" placeholder="例：A121666888">
+    <input class="NID" 
+       type="text" 
+       placeholder="例：A121666888" 
+       pattern="[A-Z][1-2][0-9]{8}" 
+       maxlength="10" 
+       oninput="this.value = this.value.toUpperCase();"
+       required>
   </div>
   `;
 
