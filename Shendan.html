@@ -305,9 +305,10 @@ function sendLine(){
   m += `合計金額：${grandTotal} 元`;
 
   // ===== LINE URL =====
-  const lineUrl=
-  "https://line.me/R/oaMessage/@813bpsag/?"
-  + encodeURIComponent(m);
+  const lineUrl = <span style="color:red">"https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m);</span>
+  // const lineUrl=
+  // "https://line.me/R/oaMessage/@813bpsag/?"
+  // + encodeURIComponent(m);
 
   // ===== Google Sheet =====
   let formData=new URLSearchParams();
