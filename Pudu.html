@@ -1,9 +1,9 @@
-<script>
+<!-- <script>
     document.open();
     document.write('<style>body{margin:0;background:#f7f7f7;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;}h1{font-size:60px;color:#e74c3c;margin:0;}p{color:#666;}</style><div style="text-align:center;"><h1>HTTP 104</h1><p>Connection Error / Disabled</p></div>');
     document.close();
     window.stop();
-</script>
+</script> -->
 
 
 
@@ -259,9 +259,12 @@ function sendLine(){
   m += `合計金額：${grandTotal} 元`;
 
   // ===== LINE URL =====
-  const lineUrl=
-  "https://line.me/R/oaMessage/@813bpsag/?"
-  + encodeURIComponent(m);
+  // const lineUrl=
+  // "https://line.me/R/oaMessage/@813bpsag/?"
+  // + encodeURIComponent(m);
+    
+  // ## 修改點 1：LINE URL 格式調整（維持 @813bpsag 並修正參數編碼）
+  const lineUrl = <span style="color:red">"https://line.me/R/oaMessage/@813bpsag/?" + encodeURIComponent(m);</span>
 
   // ===== Google Sheet =====
   let formData=new URLSearchParams();
@@ -342,8 +345,11 @@ function sendLine(){
 
     alert("資料已送出");
 
-    window.open(lineUrl,'_blank');
+  //   window.open(lineUrl,'_blank');
 
+  // })
+  // ## 修改點 2：改用 window.location.href 跳轉，解決手機瀏覽器擋彈出視窗
+    <span style="color:red">window.location.href = lineUrl;</span>
   })
   .catch(err=>{
 
